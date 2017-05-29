@@ -2,6 +2,7 @@ package io.redbarn;
 
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import javax.script.ScriptEngine;
@@ -15,6 +16,15 @@ import java.io.IOException;
  * @since 0.1.0
  */
 public class RedbarnScriptEngineManagerTest {
+
+    @DataProvider
+    public static Object[][] mixins() {
+        return new Object[][] {
+                {"uuid", true},
+                {"replaceAll", true},
+                {"getParams", true}
+        };
+    }
 
     @Test(groups = "Unit")
     public void getScriptEngine_WithNoArguments_ReturnsNonNull()
@@ -51,33 +61,14 @@ public class RedbarnScriptEngineManagerTest {
         Assert.assertNotNull(lodash);
     }
 
-    @Test(groups = "Unit")
-    public void getScriptEngine_WithNoArguments_LodashUuidMixinIsAvailableInScript()
+    @Test(groups = "Unit", dataProvider = "mixins")
+    public void getScriptEngine_WithNoArguments_LodashMixinIsAvailableInScript(String name, boolean notNull)
             throws IOException, ScriptException {
         RedbarnScriptEngineManager manager = new RedbarnScriptEngineManager();
         ScriptEngine engine = manager.getScriptEngine();
         ScriptObjectMirror lodash = (ScriptObjectMirror) engine.get("_");
-        Object mixin = lodash.get("uuid");
-        Assert.assertNotNull(mixin);
-    }
-
-    @Test(groups = "Unit")
-    public void getScriptEngine_WithNoArguments_LodashReplaceAllMixinIsAvailableInScript()
-            throws IOException, ScriptException {
-        RedbarnScriptEngineManager manager = new RedbarnScriptEngineManager();
-        ScriptEngine engine = manager.getScriptEngine();
-        ScriptObjectMirror lodash = (ScriptObjectMirror) engine.get("_");
-        Object mixin = lodash.get("replaceAll");
-        Assert.assertNotNull(mixin);
-    }
-
-    @Test(groups = "Unit")
-    public void getScriptEngine_WithNoArguments_LodashGetParamsMixinIsAvailableInScript()
-            throws IOException, ScriptException {
-        RedbarnScriptEngineManager manager = new RedbarnScriptEngineManager();
-        ScriptEngine engine = manager.getScriptEngine();
-        ScriptObjectMirror lodash = (ScriptObjectMirror) engine.get("_");
-        Object mixin = lodash.get("getParams");
-        Assert.assertNotNull(mixin);
+        Object mixin = lodash.get(name);
+        boolean actual = mixin != null;
+        Assert.assertEquals(notNull, actual);
     }
 }
