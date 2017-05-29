@@ -79,7 +79,7 @@ public class RedbarnScriptEngineManagerTest {
         binder = binder.replace("%redbarnName%", name);
         binder = binder.replace("'%Replace with model binding functions%';", bindFunction);
         ScriptObjectMirror redbarn = (ScriptObjectMirror) scriptEngine.eval(binder);
-        String bound = (String) redbarn.callMember("html");
-        Assert.assertEquals("<div>bar</div>", bound);
+        String bound = (String) redbarn.callMember("body");
+        Assert.assertEquals(bound,"<div>bar</div>");
     }
 }

@@ -31,10 +31,15 @@
 
     // Executes the binding function specified in the HTML template and
     // returns the model bound markup fragment.
-    that.html = function(args) {
+    that.body = function(args) {
         var $body = $('body');
         bind.apply(that, args);
         return $body.html() || 'Something went wrong';
+    };
+
+    that.html = function(args) {
+        bind.apply(that, args);
+        return $.html();
     };
 
     context.redbarn.binders[redbarnName] = that;
