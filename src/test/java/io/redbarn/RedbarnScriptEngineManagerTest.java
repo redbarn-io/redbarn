@@ -2,6 +2,7 @@ package io.redbarn;
 
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -17,6 +18,25 @@ import java.io.IOException;
  */
 public class RedbarnScriptEngineManagerTest {
 
+    private ScriptEngine scriptEngine = null;
+
+    @BeforeClass
+    public void classSetup() throws IOException, ScriptException {
+        RedbarnScriptEngineManager manager = new RedbarnScriptEngineManager();
+        scriptEngine = manager.getScriptEngine();
+    }
+
+    @DataProvider
+    public static Object[][] vars() {
+        return new Object[][] {
+                {"global", true},
+                {"console", true},
+                {"_", true},
+                {"cheerio", true},
+                {"redbarn", true}
+        };
+    }
+
     @DataProvider
     public static Object[][] mixins() {
         return new Object[][] {
@@ -29,55 +49,23 @@ public class RedbarnScriptEngineManagerTest {
     @Test(groups = "Unit")
     public void getScriptEngine_WithNoArguments_ReturnsNonNull()
             throws IOException, ScriptException {
-        RedbarnScriptEngineManager manager = new RedbarnScriptEngineManager();
-        ScriptEngine engine = manager.getScriptEngine();
-        Assert.assertNotNull(engine);
+        Assert.assertNotNull(scriptEngine);
     }
 
-    @Test(groups = "Unit")
-    public void getScriptEngine_WithNoArguments_GlobalKeywordIsAvailableInScript()
+    @Test(groups = "Unit", dataProvider = "vars")
+    public void getScriptEngine_WithNoArguments_ObjectIsAvailableInScript(String name, boolean notNull)
             throws IOException, ScriptException {
-        RedbarnScriptEngineManager manager = new RedbarnScriptEngineManager();
-        ScriptEngine engine = manager.getScriptEngine();
-        Object global = engine.get("global");
-        Assert.assertNotNull(global);
-    }
-
-    @Test(groups = "Unit")
-    public void getScriptEngine_WithNoArguments_ConsoleIsAvailableInScript()
-            throws IOException, ScriptException {
-        RedbarnScriptEngineManager manager = new RedbarnScriptEngineManager();
-        ScriptEngine engine = manager.getScriptEngine();
-        Object console = engine.get("console");
-        Assert.assertNotNull(console);
-    }
-
-    @Test(groups = "Unit")
-    public void getScriptEngine_WithNoArguments_LodashIsAvailableInScript()
-            throws IOException, ScriptException {
-        RedbarnScriptEngineManager manager = new RedbarnScriptEngineManager();
-        ScriptEngine engine = manager.getScriptEngine();
-        Object lodash = engine.get("_");
-        Assert.assertNotNull(lodash);
+        Object variable = scriptEngine.get(name);
+        Assert.assertNotNull(variable);
     }
 
     @Test(groups = "Unit", dataProvider = "mixins")
     public void getScriptEngine_WithNoArguments_LodashMixinIsAvailableInScript(String name, boolean notNull)
             throws IOException, ScriptException {
-        RedbarnScriptEngineManager manager = new RedbarnScriptEngineManager();
-        ScriptEngine engine = manager.getScriptEngine();
-        ScriptObjectMirror lodash = (ScriptObjectMirror) engine.get("_");
+        ScriptObjectMirror lodash = (ScriptObjectMirror) scriptEngine.get("_");
         Object mixin = lodash.get(name);
         boolean actual = mixin != null;
         Assert.assertEquals(notNull, actual);
     }
 
-    @Test(groups = "Unit")
-    public void getScriptEngine_WithNoArguments_CheerioIsAvailableInScript()
-            throws IOException, ScriptException {
-        RedbarnScriptEngineManager manager = new RedbarnScriptEngineManager();
-        ScriptEngine engine = manager.getScriptEngine();
-        Object cheerio = engine.get("cheerio");
-        Assert.assertNotNull(cheerio);
-    }
 }
