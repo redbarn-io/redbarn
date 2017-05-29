@@ -5,15 +5,10 @@
     'use strict';
 
     var $ = null,
-        $redbarnElement = null,
         that = {};
 
-    // Clean and load cheerio from markup.
-    markup = _.replaceAll(markup, '&#039;', '\'');
-    $ = cheerio.load(markup);
-
-    // Create a bindEach cheerio plugin.
-    $.prototype.bindEach = function (items, callback) {
+    // Allows elements to be bound iteratively.
+    function repeat(items, callback) {
         var $ele = $(this),
             $first = $ele.children().first(),
             template = $('<div>').append($first.clone()).html();
@@ -28,6 +23,12 @@
     };
 
     '%Replace with model binding functions%';
+
+    // Clean and load cheerio with markup.
+    that.markup = function(markup) {
+        markup = _.replaceAll(markup, '&#039;', '\'');
+        $ = cheerio.load(markup);
+    }
 
     // Executes the binding function specified in the HTML template and
     // returns the model bound markup fragment.
@@ -45,4 +46,4 @@
     context.redbarn.binders[redbarnName] = that;
     return that;
 
-})(global, global._, global.cheerio, '%markup%', '%redbarnName%');
+})(global, global._, global.cheerio, '%redbarnName%');
