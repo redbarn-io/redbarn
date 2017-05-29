@@ -1,43 +1,53 @@
-// Creates the redbarn namespace.
+// An IIFE for model binding / HTML template processing.  At runtime the
+// JavaScript expression '{ProcessFunction}' is substituted for the user
+// defined "process" function.  The "process" function is, in turn, called
+// by either of the conversion functions such as "that.body()" or "that.html()".
+//
 //  context - The global context.
+//  _       - A JavaScript utility helper (lodash).
 //  cheerio - A jQuery like HTML processor.
-(function (context, _, cheerio, markup, redbarnName) {
+(function (context, _, cheerio) {
     'use strict';
 
     var $ = null,
-        $redbarnElement = null,
         that = {};
 
-    // Clean and load cheerio from markup.
-    markup = _.replaceAll(markup, '&#039;', '\'');
-    $ = cheerio.load(markup);
+    '{ProcessFunction}';
 
-    // Create a bindEach cheerio plugin.
-    $.prototype.bindEach = function (items, callback) {
-        var $ele = $(this),
-            $first = $ele.children().first(),
-            template = $('<div>').append($first.clone()).html();
-        $ele.empty();
-        items.forEach(function (item) {
-            var $template = $(template);
-            if (callback) {
-                callback($template, item);
-            }
-            $ele.append($template);
-        });
+    // Clean and load cheerio with markup.
+    that.markup = function(markup) {
+        markup = _.replaceAll(markup, '&#039;', '\'');
+        $ = cheerio.load(markup);
     };
 
-    '%Replace with model binding functions%';
+    // Stores the model binding script into the array of binders.
+    that.saveModelBinder = function(key) {
+        context.redbarn.processors[key] = that;
+    };
 
-    // Executes the binding function specified in the HTML template and
-    // returns the model bound markup fragment.
-    that.html = function(args) {
-        var $body = $('body');
-        bind.apply(that, args);
+    // Executes the process function specified in the HTML template and
+    // returns the markup fragment in the body tag.
+    that.body = function(args) {
+        var $body = $('body'),
+            args = [];
+        if (process) {
+            args = _.argsToArray(arguments);
+            process.apply(that, args);
+        }
         return $body.html() || 'Something went wrong';
     };
 
-    context.redbarn.binders[redbarnName] = that;
+    // Executes the process function specified in the HTML template and
+    // returns the entire processed markup file.
+    that.html = function() {
+        var args = [];_.argsToArray(arguments);
+        if (process) {
+            args = _.argsToArray(arguments);
+            process.apply(that, args);
+        }
+        return $.html();
+    };
+
     return that;
 
-})(global, global._, global.cheerio, '%markup%', '%redbarnName%');
+})(global, global._, global.cheerio);
