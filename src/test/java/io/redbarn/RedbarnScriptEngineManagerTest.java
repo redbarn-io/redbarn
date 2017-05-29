@@ -71,4 +71,13 @@ public class RedbarnScriptEngineManagerTest {
         boolean actual = mixin != null;
         Assert.assertEquals(notNull, actual);
     }
+
+    @Test(groups = "Unit")
+    public void getScriptEngine_WithNoArguments_CheerioIsAvailableInScript()
+            throws IOException, ScriptException {
+        RedbarnScriptEngineManager manager = new RedbarnScriptEngineManager();
+        ScriptEngine engine = manager.getScriptEngine();
+        Object cheerio = engine.get("cheerio");
+        Assert.assertNotNull(cheerio);
+    }
 }

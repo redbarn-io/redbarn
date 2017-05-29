@@ -42,6 +42,9 @@ public class RedbarnScriptEngineManager extends ScriptEngineManager {
         try (Reader mixins = getScriptResource("scripts/lodash-mixins.js")) {
             engine.eval(mixins);
         }
+        try (Reader cheerio = getScriptResource("scripts/cheerio-bundle.js")) {
+            engine.eval(cheerio);
+        }
         return engine;
     }
 
