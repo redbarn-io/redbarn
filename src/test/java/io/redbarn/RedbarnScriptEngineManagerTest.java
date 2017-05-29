@@ -68,4 +68,18 @@ public class RedbarnScriptEngineManagerTest {
         Assert.assertEquals(notNull, actual);
     }
 
+    @Test(groups = "Unit")
+    public void getScriptEngine_WithNoArguments_ModelBinderCanBeSavedInScript()
+            throws IOException, ScriptException {
+        String binder = RedbarnScriptEngineManager.getResourceAsString("scripts/model-binder.js");
+        String markup = "<html><body><div>foo</div></body></html>";
+        String name = "foo";
+        String bindFunction = "function bind() { $('div').text('bar'); }";
+        binder = binder.replace("%markup%", markup);
+        binder = binder.replace("%redbarnName%", name);
+        binder = binder.replace("'%Replace with model binding functions%';", bindFunction);
+        ScriptObjectMirror redbarn = (ScriptObjectMirror) scriptEngine.eval(binder);
+        String bound = (String) redbarn.callMember("html");
+        Assert.assertEquals("<div>bar</div>", bound);
+    }
 }
