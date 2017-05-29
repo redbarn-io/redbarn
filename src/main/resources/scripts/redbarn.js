@@ -4,7 +4,7 @@
     'use strict';
 
     var that = {
-        binders: {}
+        processors: {}
     };
     context.redbarn = that;
 }(global));

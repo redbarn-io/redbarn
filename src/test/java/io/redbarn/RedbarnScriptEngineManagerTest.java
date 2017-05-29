@@ -42,7 +42,8 @@ public class RedbarnScriptEngineManagerTest {
         return new Object[][] {
                 {"uuid", true},
                 {"replaceAll", true},
-                {"getParams", true}
+                {"getParams", true},
+                {"argsToArray", true}
         };
     }
 
@@ -66,20 +67,5 @@ public class RedbarnScriptEngineManagerTest {
         Object mixin = lodash.get(name);
         boolean actual = mixin != null;
         Assert.assertEquals(notNull, actual);
-    }
-
-    @Test(groups = "Unit")
-    public void getScriptEngine_WithNoArguments_ModelBinderCanBeSavedInScript()
-            throws IOException, ScriptException {
-        String binder = RedbarnScriptEngineManager.getResourceAsString("scripts/model-binder.js");
-        String markup = "<html><body><div>foo</div></body></html>";
-        String name = "foo";
-        String bindFunction = "function bind() { $('div').text('bar'); }";
-        binder = binder.replace("%markup%", markup);
-        binder = binder.replace("%redbarnName%", name);
-        binder = binder.replace("'%Replace with model binding functions%';", bindFunction);
-        ScriptObjectMirror redbarn = (ScriptObjectMirror) scriptEngine.eval(binder);
-        String bound = (String) redbarn.callMember("body");
-        Assert.assertEquals(bound,"<div>bar</div>");
     }
 }

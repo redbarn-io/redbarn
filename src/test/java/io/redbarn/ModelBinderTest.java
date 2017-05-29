@@ -1,13 +1,19 @@
 package io.redbarn;
 
+import jdk.nashorn.api.scripting.JSObject;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
+import jdk.nashorn.api.scripting.ScriptUtils;
+import jdk.nashorn.internal.runtime.ScriptFunction;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Set;
 
 /**
  * Tests the scipts/model-binder.js resource
@@ -26,43 +32,39 @@ public class ModelBinderTest {
     }
 
     @Test(groups = "Unit")
-    public void iife_MarkupContainsNoLineBreaks_LoadsMarkupInCheerio()
-            throws IOException, ScriptException {
-        String binder = RedbarnScriptEngineManager.getResourceAsString("scripts/model-binder.js");
-        String markup = "<html><body><div>foo</div></body></html>";
-        String name = "foo";
-        String bindFunction = "function bind() { }";
-        binder = binder.replace("%markup%", markup);
-        binder = binder.replace("%redbarnName%", name);
-        binder = binder.replace("'%Replace with model binding functions%';", bindFunction);
-        ScriptObjectMirror redbarn = (ScriptObjectMirror) scriptEngine.eval(binder);
-        String bound = (String) redbarn.callMember("html");
-        Assert.assertEquals(bound, markup);
-    }
-
-    @Test(groups = "Unit")
     public void iife_MarkupContainsLineBreaks_LoadsMarkupInCheerio()
-            throws IOException, ScriptException {
+            throws IOException, ScriptException, NoSuchMethodException {
+
+        // Merges the model binding script from the template and loads it into
+        // the script engine.
         String binder = RedbarnScriptEngineManager.getResourceAsString("scripts/model-binder.js");
-        String markup =
-                "<html>\n" +
-                "  <body>\n" +
-                "    <div class=\"change\">foo</div>\n" +
-                "  </body>\n" +
-                "</html>";
-        String name = "foo";
-        String bindFunction = "function bind() { $('.change').text('bar'); }";
-        binder = binder.replace("%redbarnName%", name);
-        binder = binder.replace("'%Replace with model binding functions%';", bindFunction);
+        String processFunction = "function process(foo, bar, baz) { $('.change').text(baz); }";
+        binder = binder.replace("'{ProcessFunction}';", processFunction);
         ScriptObjectMirror redbarn = (ScriptObjectMirror) scriptEngine.eval(binder);
+
+        // Registers the markup to be transformed.
+        String markup = "<html>\n" +
+                        "  <body>\n" +
+                        "    <div class=\"change\">foo</div>\n" +
+                        "  </body>\n" +
+                        "</html>";
         redbarn.callMember("markup", markup);
-        String actual = (String) redbarn.callMember("html");
-        String expected =
-                "<html>\n" +
-                "  <body>\n" +
-                "    <div class=\"change\">bar</div>\n" +
-                "  </body>\n" +
-                "</html>";
+
+        // Stores the model binder in the script engine for later use.
+        String key = "foo";
+        redbarn.callMember("saveModelBinder", key);
+
+        // Gets the results of the model binder.
+        Object[] args = new Object[3];
+        args[0] = "foo";
+        args[1] = "bar";
+        args[2] = "baz";
+        String actual = (String) redbarn.callMember("html", args);
+        String expected = "<html>\n" +
+                          "  <body>\n" +
+                          "    <div class=\"change\">baz</div>\n" +
+                          "  </body>\n" +
+                          "</html>";
         Assert.assertEquals(actual, expected);
     }
 }
