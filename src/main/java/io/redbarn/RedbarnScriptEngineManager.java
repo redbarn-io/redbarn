@@ -36,10 +36,16 @@ public class RedbarnScriptEngineManager extends ScriptEngineManager {
         try (Reader polyfil = getScriptResource("scripts/nashorn-polyfil.js")) {
             engine.eval(polyfil);
         }
+        try (Reader lodash = getScriptResource("scripts/lodash-bundle.js")) {
+            engine.eval(lodash);
+        }
+        try (Reader mixins = getScriptResource("scripts/lodash-mixins.js")) {
+            engine.eval(mixins);
+        }
         return engine;
     }
 
-    private static synchronized Reader getScriptResource( String resource)
+    private static synchronized Reader getScriptResource(String resource)
             throws IOException {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         InputStream is = classloader.getResourceAsStream(resource);

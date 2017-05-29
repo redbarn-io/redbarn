@@ -1,5 +1,6 @@
 package io.redbarn;
 
+import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -24,7 +25,7 @@ public class RedbarnScriptEngineManagerTest {
     }
 
     @Test(groups = "Unit")
-    public void getScriptEngine_WithNoArguments_GlobalKeywordIsAvailbleInScript()
+    public void getScriptEngine_WithNoArguments_GlobalKeywordIsAvailableInScript()
             throws IOException, ScriptException {
         RedbarnScriptEngineManager manager = new RedbarnScriptEngineManager();
         ScriptEngine engine = manager.getScriptEngine();
@@ -33,11 +34,50 @@ public class RedbarnScriptEngineManagerTest {
     }
 
     @Test(groups = "Unit")
-    public void getScriptEngine_WithNoArguments_ConsoleIsAvailbleInScript()
+    public void getScriptEngine_WithNoArguments_ConsoleIsAvailableInScript()
             throws IOException, ScriptException {
         RedbarnScriptEngineManager manager = new RedbarnScriptEngineManager();
         ScriptEngine engine = manager.getScriptEngine();
         Object console = engine.get("console");
         Assert.assertNotNull(console);
+    }
+
+    @Test(groups = "Unit")
+    public void getScriptEngine_WithNoArguments_LodashIsAvailableInScript()
+            throws IOException, ScriptException {
+        RedbarnScriptEngineManager manager = new RedbarnScriptEngineManager();
+        ScriptEngine engine = manager.getScriptEngine();
+        Object lodash = engine.get("_");
+        Assert.assertNotNull(lodash);
+    }
+
+    @Test(groups = "Unit")
+    public void getScriptEngine_WithNoArguments_LodashUuidMixinIsAvailableInScript()
+            throws IOException, ScriptException {
+        RedbarnScriptEngineManager manager = new RedbarnScriptEngineManager();
+        ScriptEngine engine = manager.getScriptEngine();
+        ScriptObjectMirror lodash = (ScriptObjectMirror) engine.get("_");
+        Object mixin = lodash.get("uuid");
+        Assert.assertNotNull(mixin);
+    }
+
+    @Test(groups = "Unit")
+    public void getScriptEngine_WithNoArguments_LodashReplaceAllMixinIsAvailableInScript()
+            throws IOException, ScriptException {
+        RedbarnScriptEngineManager manager = new RedbarnScriptEngineManager();
+        ScriptEngine engine = manager.getScriptEngine();
+        ScriptObjectMirror lodash = (ScriptObjectMirror) engine.get("_");
+        Object mixin = lodash.get("replaceAll");
+        Assert.assertNotNull(mixin);
+    }
+
+    @Test(groups = "Unit")
+    public void getScriptEngine_WithNoArguments_LodashGetParamsMixinIsAvailableInScript()
+            throws IOException, ScriptException {
+        RedbarnScriptEngineManager manager = new RedbarnScriptEngineManager();
+        ScriptEngine engine = manager.getScriptEngine();
+        ScriptObjectMirror lodash = (ScriptObjectMirror) engine.get("_");
+        Object mixin = lodash.get("getParams");
+        Assert.assertNotNull(mixin);
     }
 }
