@@ -1,19 +1,13 @@
 package io.redbarn;
 
-import jdk.nashorn.api.scripting.JSObject;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
-import jdk.nashorn.api.scripting.ScriptUtils;
-import jdk.nashorn.internal.runtime.ScriptFunction;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Set;
 
 /**
  * Tests the scipts/model-binder.js resource
