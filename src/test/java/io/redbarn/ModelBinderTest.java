@@ -31,7 +31,7 @@ public class ModelBinderTest {
 
         // Merges the model binding script from the template and loads it into
         // the script engine.
-        String binder = RedbarnScriptEngineManager.getResourceAsString("scripts/model-binder.js");
+        String binder = ResourceUtils.getResourceString("scripts/model-binder.js");
         String processFunction = "function process(foo, bar, baz) { $('.change').text(baz); }";
         binder = binder.replace("'{ProcessFunction}';", processFunction);
         ScriptObjectMirror redbarn = (ScriptObjectMirror) scriptEngine.eval(binder);
