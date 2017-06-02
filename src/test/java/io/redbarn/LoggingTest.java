@@ -7,7 +7,7 @@ import org.testng.annotations.Test;
 
 public class LoggingTest {
 
-    @Test
+    @Test(groups = "Fast")
     public void Logger_InstantiatedViaFacade_IsNotNull() {
         Logger logger = LoggerFactory.getLogger(LoggingTest.class);
         Assert.assertNotNull(logger);

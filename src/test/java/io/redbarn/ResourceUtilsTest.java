@@ -11,24 +11,24 @@ import java.io.Reader;
  */
 public class ResourceUtilsTest {
 
-    @Test(expectedExceptions = IOException.class)
+    @Test(groups = "Fast", expectedExceptions = IOException.class)
     public void getResourceString_ResourceNotFound_Throws() throws IOException {
         ResourceUtils.getResourceString("foo/bar.baz");
     }
 
-    @Test
+    @Test(groups = "Fast")
     public void getResourceString_ResourceFound_ReturnsResourceAsString() throws IOException {
         String text = ResourceUtils.getResourceString("scripts/redbarn.js");
         Assert.assertNotNull(text);
     }
 
-    @Test
+    @Test(groups = "Fast")
     public void getResourceReader_ResourceNotFound_ReturnsNull() {
         Reader reader = ResourceUtils.getResourceReader("foo/bar.baz");
         Assert.assertNull(reader);
     }
 
-    @Test
+    @Test(groups = "Fast")
     public void getResourceReader_ResourceFound_ReturnsReader() throws IOException {
         Reader reader = ResourceUtils.getResourceReader("scripts/redbarn.js");
         Assert.assertNotNull(reader);

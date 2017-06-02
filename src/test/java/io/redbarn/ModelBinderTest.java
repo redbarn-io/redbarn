@@ -25,8 +25,8 @@ public class ModelBinderTest {
         scriptEngine = manager.getScriptEngine();
     }
 
-    @Test(groups = "Unit")
-    public void iife_MarkupContainsLineBreaks_LoadsMarkupInCheerio()
+    @Test(groups = "Slow")
+    public void html_MarkupContainsLineBreaks_ConvertsMarkupCorrectly()
             throws IOException, ScriptException, NoSuchMethodException {
 
         // Merges the model binding script from the template and loads it into

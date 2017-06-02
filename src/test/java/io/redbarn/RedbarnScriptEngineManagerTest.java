@@ -47,20 +47,20 @@ public class RedbarnScriptEngineManagerTest {
         };
     }
 
-    @Test(groups = "Unit")
+    @Test(groups = "Slow")
     public void getScriptEngine_WithNoArguments_ReturnsNonNull()
             throws IOException, ScriptException {
         Assert.assertNotNull(scriptEngine);
     }
 
-    @Test(groups = "Unit", dataProvider = "vars")
+    @Test(groups = "Slow", dataProvider = "vars")
     public void getScriptEngine_WithNoArguments_ObjectIsAvailableInScript(String name, boolean notNull)
             throws IOException, ScriptException {
         Object variable = scriptEngine.get(name);
         Assert.assertNotNull(variable);
     }
 
-    @Test(groups = "Unit", dataProvider = "mixins")
+    @Test(groups = "Slow", dataProvider = "mixins")
     public void getScriptEngine_WithNoArguments_LodashMixinIsAvailableInScript(String name, boolean notNull)
             throws IOException, ScriptException {
         ScriptObjectMirror lodash = (ScriptObjectMirror) scriptEngine.get("_");
