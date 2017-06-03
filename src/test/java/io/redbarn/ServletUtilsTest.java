@@ -7,6 +7,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import java.util.List;
+
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 
@@ -68,5 +70,40 @@ public class ServletUtilsTest {
         when(context.getAttribute("foo")).thenReturn("bar");
         Object actual = ServletUtils.getWebVariable("foo", request);
         assertEquals(actual, "bar");
+    }
+
+    @Test(groups = "Fast", expectedExceptions = IllegalArgumentException.class)
+    public void getWebVariables_RequestIsNull_Throws() {
+        String[] names = new String[1];
+        ServletUtils.getWebVariables(names, null);
+    }
+
+    @Test(groups = "Fast", expectedExceptions = IllegalArgumentException.class)
+    public void getWebVariables_NamesIsNull_Throws() {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        ServletUtils.getWebVariables(null, request);
+    }
+
+    @Test(groups = "Fast")
+    public void getWebVariables_NamesAndRequestAreValid_ReturnsNonNull() {
+        when(request.getParameter("foo")).thenReturn("bar");
+        when(request.getParameter("foos")).thenReturn("bars");
+        String[] names = new String[] { "foo", "foos" };
+        List<Object> vars = ServletUtils.getWebVariables(names, request);
+        assertNotNull(vars);
+    }
+
+    @Test(groups = "Fast")
+    public void getWebVariables_NamesAreInvalidAndRequestIsValid_ReturnsNonNull() {
+        String[] names = new String[] { "baz", "bazels" };
+        List<Object> vars = ServletUtils.getWebVariables(names, request);
+        assertNotNull(vars);
+    }
+
+    @Test(groups = "Fast")
+    public void getWebVariables_Always_ReturnsOneAdditionalVariable() {
+        String[] names = new String[] { "baz", "bazels" };
+        List<Object> vars = ServletUtils.getWebVariables(names, request);
+        assertEquals(vars.size(), names.length + 1);
     }
 }
