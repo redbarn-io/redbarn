@@ -6,8 +6,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 /**
  * Handles the conversion of markup.
@@ -37,17 +36,8 @@ public class MarkupConverter {
         mirror.callMember("saveModelBinder", key);
 
         // Gets the results of the model binder.
-        Object[] args = new Object[3];
-        args[0] = request.getAttribute("foo");
-        args[1] = request.getAttribute("bar");
-        args[2] = request.getAttribute("baz");
-        Map<String, Object> options = new HashMap<>();
-        options.put("context", request.getServletContext());
-        options.put("session", request.getSession());
-        options.put("request", request);
-        options.put("locale", request.getLocale());
-        options.put("params", request.getParameterMap());
-        args[3] = options;
+        String[] params = new String[] { "foo", "bar", "baz" };
+        List<Object> args = ServletUtils.getWebVariables(params, request);
 
         return (String) mirror.callMember("html", args);
     }
