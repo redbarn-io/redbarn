@@ -25,7 +25,7 @@ public class MarkupConverter {
 
         // Merges the model binding script from the template and loads it into
         // the script engine.
-        String binder = ResourceUtils.getResourceString("scripts/model-binder.js");
+        String binder = ResourceUtils.getResourceString("scripts/html-processor.js");
         binder = binder.replace("'{ProcessFunction}';", processFunction);
         ScriptObjectMirror mirror = (ScriptObjectMirror) scriptEngine.eval(binder);
 

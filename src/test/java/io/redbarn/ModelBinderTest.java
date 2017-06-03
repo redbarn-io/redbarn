@@ -10,19 +10,24 @@ import javax.script.ScriptException;
 import java.io.IOException;
 
 /**
- * Tests the scipts/model-binder.js resource
+ * Tests the scipts/html-processor.js resource
  *
  * @author Mike Atkisson
  * @since 0.1.0
  */
 public class ModelBinderTest {
 
-    private ScriptEngine scriptEngine = null;
+    private ScriptEngine scriptEngine;
+    private String scriptTemplate;
 
     @BeforeClass
-    public void classSetup() throws IOException, ScriptException {
+    public void setupClass() throws IOException, ScriptException {
         RedbarnScriptEngineManager manager = new RedbarnScriptEngineManager();
         scriptEngine = manager.getScriptEngine();
+    }
+
+    public void setupTest() throws IOException {
+        scriptTemplate = ResourceUtils.getResourceString("scripts/html-processor.js");
     }
 
     @Test(groups = "Slow")
@@ -31,10 +36,9 @@ public class ModelBinderTest {
 
         // Merges the model binding script from the template and loads it into
         // the script engine.
-        String binder = ResourceUtils.getResourceString("scripts/model-binder.js");
         String processFunction = "function process(foo, bar, baz) { $('.change').text(baz); }";
-        binder = binder.replace("'{ProcessFunction}';", processFunction);
-        ScriptObjectMirror redbarn = (ScriptObjectMirror) scriptEngine.eval(binder);
+        scriptTemplate = scriptTemplate.replace("'{ProcessFunction}';", processFunction);
+        ScriptObjectMirror redbarn = (ScriptObjectMirror) scriptEngine.eval(scriptTemplate);
 
         // Registers the markup to be transformed.
         String markup = "<html>\n" +
@@ -46,7 +50,7 @@ public class ModelBinderTest {
 
         // Stores the model binder in the script engine for later use.
         String key = "foo";
-        redbarn.callMember("saveModelBinder", key);
+        redbarn.callMember("save", key);
 
         // Gets the results of the model binder.
         Object[] args = new Object[3];
