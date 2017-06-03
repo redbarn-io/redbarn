@@ -33,25 +33,25 @@ public class ServletUtilsTest {
 
     @Test(groups = "Fast", expectedExceptions = IllegalArgumentException.class)
     public void getWebVariable_RequestIsNull_Throws() {
-        ServletUtils.getWebVariable(null, "foo");
+        ServletUtils.getWebVariable("foo", null);
     }
 
     @Test(groups = "Fast", expectedExceptions = IllegalArgumentException.class)
     public void getWebVariable_NameIsNullOrEmpty_Throws() {
-        ServletUtils.getWebVariable(request, null);
+        ServletUtils.getWebVariable(null, request);
     }
 
     @Test(groups = "Fast")
     public void getWebVariable_VariableInRequestInRequestScope_ReturnsNonNull() {
         when(request.getAttribute("foo")).thenReturn("bar");
-        Object actual = ServletUtils.getWebVariable(request, "foo");
+        Object actual = ServletUtils.getWebVariable("foo", request);
         assertEquals(actual, "bar");
     }
 
     @Test(groups = "Fast")
     public void getWebVariable_VariableInRequestParameters_ReturnsNonNull() {
         when(request.getParameter("foo")).thenReturn("bar");
-        Object actual = ServletUtils.getWebVariable(request, "foo");
+        Object actual = ServletUtils.getWebVariable("foo", request);
         assertEquals(actual, "bar");
     }
 
@@ -59,14 +59,14 @@ public class ServletUtilsTest {
     public void getWebVariable_VariableInSessionScope_ReturnsNonNull() {
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute("foo")).thenReturn("bar");
-        Object actual = ServletUtils.getWebVariable(request, "foo");
+        Object actual = ServletUtils.getWebVariable("foo", request);
         assertEquals(actual, "bar");
     }
 
     @Test(groups = "Fast")
     public void getWebVariable_VariableInApplicationScope_ReturnsNonNull() {
         when(context.getAttribute("foo")).thenReturn("bar");
-        Object actual = ServletUtils.getWebVariable(request, "foo");
+        Object actual = ServletUtils.getWebVariable("foo", request);
         assertEquals(actual, "bar");
     }
 }

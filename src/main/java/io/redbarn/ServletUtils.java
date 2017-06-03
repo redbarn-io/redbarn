@@ -21,7 +21,7 @@ public class ServletUtils {
      * @param name The name of the variable for which to search.
      * @return The variable or null if not found.
      */
-    public static Object getWebVariable(HttpServletRequest request, String name) {
+    public static Object getWebVariable(String name, HttpServletRequest request) {
         if (request == null) {
             throw new IllegalArgumentException("The 'request' argument cannot be null");
         }
