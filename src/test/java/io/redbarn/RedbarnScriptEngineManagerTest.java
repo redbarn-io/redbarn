@@ -20,7 +20,7 @@ public class RedbarnScriptEngineManagerTest {
 
     private ScriptEngine scriptEngine = null;
 
-    @BeforeClass
+    @BeforeClass(groups = "Slow")
     public void classSetup() throws IOException, ScriptException {
         RedbarnScriptEngineManager manager = new RedbarnScriptEngineManager();
         scriptEngine = manager.getScriptEngine();

@@ -3,6 +3,7 @@ package io.redbarn;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import javax.script.ScriptEngine;
@@ -20,12 +21,13 @@ public class ModelBinderTest {
     private ScriptEngine scriptEngine;
     private String scriptTemplate;
 
-    @BeforeClass
+    @BeforeClass(groups = "Slow")
     public void setupClass() throws IOException, ScriptException {
         RedbarnScriptEngineManager manager = new RedbarnScriptEngineManager();
         scriptEngine = manager.getScriptEngine();
     }
 
+    @BeforeTest(groups = "Slow")
     public void setupTest() throws IOException {
         scriptTemplate = ResourceUtils.getResourceString("scripts/html-processor.js");
     }
