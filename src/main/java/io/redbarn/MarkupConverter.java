@@ -33,7 +33,7 @@ public class MarkupConverter {
         mirror.callMember("markup", markup);
 
         // Stores the model binder in the script engine for later use.
-        mirror.callMember("saveModelBinder", key);
+        mirror.callMember("save", key);
 
         // Gets the results of the model binder.
         String[] params = new String[] { "foo", "bar", "baz" };

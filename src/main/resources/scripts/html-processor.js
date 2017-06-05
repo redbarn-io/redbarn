@@ -21,8 +21,13 @@
     };
 
     // Stores the processor script into the array of processors.
-    processor.saveModelBinder = function(key) {
+    processor.save = function(key) {
         context.redbarn.processors[key] = processor;
+    };
+
+    // Gets all parameters listed in the "process" function as non-null array.
+    processor.params = function () {
+        return _.getParams(process);
     };
 
     // Executes the process function specified in the HTML template and
