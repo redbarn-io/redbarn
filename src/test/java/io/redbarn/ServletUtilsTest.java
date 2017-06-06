@@ -89,21 +89,21 @@ public class ServletUtilsTest {
         when(request.getParameter("foo")).thenReturn("bar");
         when(request.getParameter("foos")).thenReturn("bars");
         String[] names = new String[] { "foo", "foos" };
-        List<Object> vars = ServletUtils.getWebVariables(names, request);
+        Object[] vars = ServletUtils.getWebVariables(names, request);
         assertNotNull(vars);
     }
 
     @Test(groups = "Fast")
     public void getWebVariables_NamesAreInvalidAndRequestIsValid_ReturnsNonNull() {
         String[] names = new String[] { "baz", "bazels" };
-        List<Object> vars = ServletUtils.getWebVariables(names, request);
+        Object[] vars = ServletUtils.getWebVariables(names, request);
         assertNotNull(vars);
     }
 
     @Test(groups = "Fast")
-    public void getWebVariables_Always_ReturnsOneAdditionalVariable() {
-        String[] names = new String[] { "baz", "bazels" };
-        List<Object> vars = ServletUtils.getWebVariables(names, request);
-        assertEquals(vars.size(), names.length + 1);
+    public void getWebVariables_ParameterIsRequest_ReturnsServletRequest() {
+        String[] names = new String[] { "baz", "request" };
+        Object[] vars = ServletUtils.getWebVariables(names, request);
+        assertEquals(vars[1], request);
     }
 }

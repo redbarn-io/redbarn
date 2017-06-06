@@ -33,15 +33,18 @@ public class ServletUtils {
             throw new IllegalArgumentException("The 'name' argument cannot be null or empty.");
         }
 
-        Object variable = request.getAttribute(name);
-        if (variable == null) {
-            variable = request.getParameter(name);
-        }
-        if (variable == null) {
-            variable = request.getSession().getAttribute(name);
-        }
-        if (variable == null) {
-            variable = request.getServletContext().getAttribute(name);
+        Object variable = null;
+        if (!name.toLowerCase().equals("request")) {
+            variable = request.getAttribute(name);
+            if (variable == null) {
+                variable = request.getParameter(name);
+            }
+            if (variable == null) {
+                variable = request.getSession().getAttribute(name);
+            }
+            if (variable == null) {
+                variable = request.getServletContext().getAttribute(name);
+            }
         }
         return variable;
     }
@@ -65,7 +68,7 @@ public class ServletUtils {
      * @param request The Http Servlet Request from which to search.
      * @return A non-null list of variables.
      */
-    public static List<Object> getWebVariables(
+    public static Object[] getWebVariables(
             String[] names,
             HttpServletRequest request) {
         if (request == null) {
@@ -77,11 +80,14 @@ public class ServletUtils {
 
         List<Object> variables = new ArrayList<>();
         for(String name : names) {
-            Object variable = getWebVariable(name, request);
-            variables.add(variable);
+            if (name.toLowerCase().equals("request")) {
+                variables.add(request);
+            } else {
+                Object variable = getWebVariable(name, request);
+                variables.add(variable);
+            }
         }
-        variables.add(request);
-        return variables;
+        return variables.toArray();
     }
 
 }

@@ -89,7 +89,7 @@ public class HtmlProcessorScriptImage {
     public String getBodyMarkup(HttpServletRequest request) {
         // Gets the results of the model binder.
         String[] params = getParameters();
-        List<Object> args = ServletUtils.getWebVariables(params, request);
-        return (String) mirror.callMember("html", args);
+        Object[] args = ServletUtils.getWebVariables(params, request);
+        return (String) mirror.callMember("body", args);
     }
 }

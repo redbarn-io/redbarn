@@ -37,7 +37,7 @@ public class MarkupConverter {
 
         // Gets the results of the model binder.
         String[] params = new String[] { "foo", "bar", "baz" };
-        List<Object> args = ServletUtils.getWebVariables(params, request);
+        Object[] args = ServletUtils.getWebVariables(params, request);
 
         return (String) mirror.callMember("html", args);
     }

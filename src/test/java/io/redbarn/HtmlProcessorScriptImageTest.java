@@ -5,10 +5,13 @@ import org.testng.annotations.Test;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+
 
 /**
  * Tests the HtmlProcessorScriptImage class.
@@ -85,5 +88,32 @@ public class HtmlProcessorScriptImageTest {
         );
         String[] params = processor.getParameters();
         assertEquals(params.length, 3);
+    }
+
+    @Test(groups = "Slow")
+    public void getBodyMarkup_MarkupHasLineBreaks_Succeeds() throws IOException, ScriptException {
+        String markup =
+                "<html> \n" +
+                "  <body> \n" +
+                "  <div class=\"change\">foo</div>\n" +
+                "  </body> \n" +
+                "<html>";
+        String processFunction =
+                "function process(foo, request) { \n" +
+                "  $('.change').text(foo); \n" +
+                "  console.log('arguments: ' + arguments.length); \n" +
+                "}";
+        HtmlProcessorScriptImage processor = new HtmlProcessorScriptImage(
+                scriptEngine,
+                markup,
+                "foo",
+                processFunction
+        );
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getAttribute("foo")).thenReturn("bar");
+        String expected = "<div class=\"change\">bar</div>";
+        String actual = processor.getBodyMarkup(request).trim();
+        assertEquals(actual, expected);
     }
 }
