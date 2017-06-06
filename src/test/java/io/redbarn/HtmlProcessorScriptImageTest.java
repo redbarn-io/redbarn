@@ -60,7 +60,7 @@ public class HtmlProcessorScriptImageTest {
     }
 
     @Test(groups = "Slow")
-    public void params_ProcessorFunctionHasNoParameters_ReturnsNonNull()
+    public void getParameters_ProcessorFunctionHasNoParameters_ReturnsNonNull()
             throws IOException, ScriptException {
         String processFunction = "function process() { alert('noop'); }";
         HtmlProcessorScriptImage processor = new HtmlProcessorScriptImage(
@@ -74,7 +74,7 @@ public class HtmlProcessorScriptImageTest {
     }
 
     @Test(groups = "Slow")
-    public void params_ProcessorFunctionHasParameters_ReturnsAllParameters()
+    public void getParameters_ProcessorFunctionHasParameters_ReturnsAllParameters()
             throws IOException, ScriptException {
         String processFunction = "function process(foo, bar, baz) { alert('noop'); }";
         HtmlProcessorScriptImage processor = new HtmlProcessorScriptImage(
