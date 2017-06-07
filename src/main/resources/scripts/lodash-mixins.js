@@ -24,13 +24,17 @@
         return original.split(find).join(replace);
     }
 
-    // Gets the parameter names of a function as an array.
+    // Gets the parameter names of a function as a non-null array.
     //  fn - The function for which to get parameter names.
     function getParams(func) {
         var text = func.toString(),
             start = text.indexOf('(') + 1,
-            end = text.indexOf(')');
-        return text.slice(start, end).match(/([^\s,]+)/g);
+            end = text.indexOf(')'),
+            params = text.slice(start, end).match(/([^\s,]+)/g);
+        if (!params) {
+            params = [];
+        }
+        return params;
     }
 
     // Converts arguments of a method into a real JavaScript array.
