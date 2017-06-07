@@ -97,7 +97,7 @@ public class HtmlProcessorScriptImageTest {
                 "  <body> \n" +
                 "  <div class=\"change\">foo</div>\n" +
                 "  </body> \n" +
-                "<html>";
+                "</html>";
         String processFunction =
                 "function process(foo, request) { \n" +
                 "  $('.change').text(foo); \n" +
@@ -114,6 +114,38 @@ public class HtmlProcessorScriptImageTest {
         when(request.getAttribute("foo")).thenReturn("bar");
         String expected = "<div class=\"change\">bar</div>";
         String actual = processor.getBodyMarkup(request).trim();
+        assertEquals(actual, expected);
+    }
+
+    @Test(groups = "Slow")
+    public void getHtmlMarkup_MarkupHasLineBreaks_Succeeds() throws IOException, ScriptException {
+        String markup =
+                "<html> \n" +
+                "  <body> \n" +
+                "  <div class=\"change\">foo</div>\n" +
+                "  </body> \n" +
+                "</html>";
+        String processFunction =
+                "function process(foo, request) { \n" +
+                "  $('.change').text(foo); \n" +
+                "  console.log('arguments: ' + arguments.length); \n" +
+                "}";
+        HtmlProcessorScriptImage processor = new HtmlProcessorScriptImage(
+                scriptEngine,
+                markup,
+                "foo",
+                processFunction
+        );
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getAttribute("foo")).thenReturn("bar");
+        String expected =
+                "<html> \n" +
+                "  <body> \n" +
+                "  <div class=\"change\">bar</div>\n" +
+                "  </body> \n" +
+                "</html>";
+        String actual = processor.getHtmlMarkup(request);
         assertEquals(actual, expected);
     }
 }

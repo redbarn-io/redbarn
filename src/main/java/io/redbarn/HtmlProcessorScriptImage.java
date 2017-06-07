@@ -17,11 +17,7 @@ import java.util.List;
  */
 public class HtmlProcessorScriptImage {
 
-    private ScriptEngine scriptEngine;
     private ScriptObjectMirror mirror;
-    private String key;
-    private String markup;
-    private String processFunction;
 
     /**
      * Creates a new instance by using a Nashorn script engine to merge a
@@ -48,11 +44,6 @@ public class HtmlProcessorScriptImage {
         if (Strings.isNullOrEmpty(key)) {
             throw new IllegalArgumentException("The 'key' argument cannot be null or empty.");
         }
-
-        this.scriptEngine = scriptEngine;
-        this.key = key;
-        this.markup = markup;
-        this.processFunction = processFunction;
 
         // Merges the model binding script from the template and loads it into
         // the script engine.
@@ -87,9 +78,20 @@ public class HtmlProcessorScriptImage {
      * @return The text inside of the HTML body tag.
      */
     public String getBodyMarkup(HttpServletRequest request) {
-        // Gets the results of the model binder.
         String[] params = getParameters();
         Object[] args = ServletUtils.getWebVariables(params, request);
         return (String) mirror.callMember("body", args);
+    }
+
+    /**
+     * Gets all of the markup processed by the markup converter.
+     *
+     * @param request The HTTP request associated with the conversion.
+     * @return All markup processed by the markup converter.
+     */
+    public String getHtmlMarkup(HttpServletRequest request) {
+        String[] params = getParameters();
+        Object[] args = ServletUtils.getWebVariables(params, request);
+        return (String) mirror.callMember("html", args);
     }
 }
