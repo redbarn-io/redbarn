@@ -7,7 +7,8 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Exposes functionality in a fully formed html-processor.js script.
@@ -47,13 +48,15 @@ public class HtmlProcessorScriptImage {
 
         // Merges the model binding script from the template and loads it into
         // the script engine.
-        String binder = ResourceUtils.getResourceString("scripts/html-processor.js");
+        String binder = ResourceUtils.getResourceString("scripts/io/redbarn/html-processor.js");
         binder = binder.replace("'{ProcessFunction}';", processFunction);
         ScriptObjectMirror mirror = (ScriptObjectMirror) scriptEngine.eval(binder);
         this.mirror = mirror;
 
         // Registers the markup to be transformed.
-        mirror.callMember("markup", markup);
+        Map<String, Object> options = new HashMap<>();
+        options.put("useHtmlParser2", true);
+        mirror.callMember("markup", markup, options);
 
         // Stores the model binder in the script engine for later use.
         mirror.callMember("save", key);

@@ -15,9 +15,9 @@
     '{ProcessFunction}';
 
     // Clean and load cheerio with markup.
-    processor.markup = function(markup) {
+    processor.markup = function(markup, options) {
         markup = _.replaceAll(markup, '&#039;', '\'');
-        $ = cheerio.load(markup);
+        $ = cheerio.load(markup, options);
     };
 
     // Stores the processor script into the array of processors.
@@ -55,4 +55,4 @@
 
     return processor;
 
-})(global, global._, global.cheerio);
+})(this, this._, this.cheerio);

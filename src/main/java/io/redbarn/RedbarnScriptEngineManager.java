@@ -20,6 +20,8 @@ import static io.redbarn.ResourceUtils.getResourceReader;
 public class RedbarnScriptEngineManager extends ScriptEngineManager {
 
     public static final String SCRIPT_ENGINE_NAME = "nashorn";
+    public static final String REDBARN_JAVASCRIPT_BUNDLE_RESOURCE =
+            "scripts/io/redbarn/redbarn-bundle.js";
     private static final Logger logger =
             LoggerFactory.getLogger(RedbarnScriptEngineManager.class);
 
@@ -33,20 +35,8 @@ public class RedbarnScriptEngineManager extends ScriptEngineManager {
      */
     public ScriptEngine getScriptEngine() throws IOException, ScriptException {
         ScriptEngine engine = getEngineByName(SCRIPT_ENGINE_NAME);
-        try (Reader polyfil = getResourceReader("scripts/nashorn-polyfil.js")) {
-            engine.eval(polyfil);
-        }
-        try (Reader lodash = getResourceReader("scripts/lodash-bundle.js")) {
-            engine.eval(lodash);
-        }
-        try (Reader mixins = getResourceReader("scripts/lodash-mixins.js")) {
-            engine.eval(mixins);
-        }
-        try (Reader cheerio = getResourceReader("scripts/cheerio-bundle.js")) {
-            engine.eval(cheerio);
-        }
-        try (Reader redbarn = getResourceReader("scripts/redbarn.js")) {
-            engine.eval(redbarn);
+        try (Reader bundle = getResourceReader(REDBARN_JAVASCRIPT_BUNDLE_RESOURCE)) {
+            engine.eval(bundle);
         }
         return engine;
     }

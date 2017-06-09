@@ -29,7 +29,6 @@ public class RedbarnScriptEngineManagerTest {
     @DataProvider
     public static Object[][] vars() {
         return new Object[][] {
-                {"global", true},
                 {"console", true},
                 {"_", true},
                 {"cheerio", true},
