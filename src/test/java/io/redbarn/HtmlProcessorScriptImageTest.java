@@ -101,7 +101,6 @@ public class HtmlProcessorScriptImageTest {
         String processFunction =
                 "function process(foo, request) { \n" +
                 "  $('.change').text(foo); \n" +
-                "  console.log('arguments: ' + arguments.length); \n" +
                 "}";
         HtmlProcessorScriptImage processor = new HtmlProcessorScriptImage(
                 scriptEngine,
@@ -128,7 +127,6 @@ public class HtmlProcessorScriptImageTest {
         String processFunction =
                 "function process(foo, request) { \n" +
                 "  $('.change').text(foo); \n" +
-                "  console.log('arguments: ' + arguments.length); \n" +
                 "}";
         HtmlProcessorScriptImage processor = new HtmlProcessorScriptImage(
                 scriptEngine,
@@ -143,6 +141,43 @@ public class HtmlProcessorScriptImageTest {
                 "<html> \n" +
                 "  <body> \n" +
                 "  <div class=\"change\">bar</div>\n" +
+                "  </body> \n" +
+                "</html>";
+        String actual = processor.getHtmlMarkup(request);
+        assertEquals(actual, expected);
+    }
+
+    @Test(groups = "Slow")
+    public void getHtmlMarkup_ProcessFunctionCallsRepeat_ReturnsExpected() throws IOException, ScriptException {
+        String markup =
+                "<html> \n" +
+                "  <body> \n" +
+                "    <ul> \n" +
+                "      <li>foo</li> \n" +
+                "    </ul> \n" +
+                "  </body> \n" +
+                "</html>";
+        String processFunction =
+                "function process(fruit, request) { \n" +
+                "  $('ul > li').repeat(fruit, function(type, li) { \n" +
+                "    li.text(type); \n" +
+                "  }); \n" +
+                "}";
+        HtmlProcessorScriptImage processor = new HtmlProcessorScriptImage(
+                scriptEngine,
+                markup,
+                "foo",
+                processFunction
+        );
+
+        String[] fruit = new String[] { "apples", "pears", "plums" };
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getAttribute("fruit")).thenReturn(fruit);
+        String expected =
+                "<html> \n" +
+                "  <body> \n" +
+                "    <ul><li>apples</li><li>pears</li><li>plums</li></ul> \n" +
                 "  </body> \n" +
                 "</html>";
         String actual = processor.getHtmlMarkup(request);

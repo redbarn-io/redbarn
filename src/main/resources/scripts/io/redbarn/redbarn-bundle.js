@@ -1,3 +1,5 @@
+//@ sourceURL=src/main/resources/scripts/io/redbarn/redbarn-bundle.js
+
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict'
 
@@ -5615,11 +5617,15 @@ _.extend(cheerio.prototype, require('./lib/cheerio/repeat'))
  * @since 0.1.0
  */
 exports.repeat = function (items, callback) {
-    var $ele = $(this),
+    var $ = $ || cheerio,
+        $ele = $(this),
         $parent = $ele.parent(),
         $first = $ele.first(),
         template = $('<div>').append($first.clone()).html();
     $parent.empty();
+    if (!Array.isArray(items)) {
+        items = Java.from(items);
+    }
     items.forEach(function (item) {
         var $template = $(template);
         if (callback) {
