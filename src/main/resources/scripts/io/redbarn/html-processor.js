@@ -32,7 +32,7 @@
 
     // Executes the process function specified in the HTML template and
     // returns the markup fragment in the body tag.
-    processor.body = function(args) {
+    processor.body = function() {
         var $body = $('body'),
             args = [];
         if (process) {
@@ -45,7 +45,7 @@
     // Executes the process function specified in the HTML template and
     // returns the entire processed markup file.
     processor.html = function() {
-        var args = [];_.argsToArray(arguments);
+        var args = [];
         if (process) {
             args = _.argsToArray(arguments);
             process.apply(processor, args);
