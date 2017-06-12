@@ -13,7 +13,7 @@
   "author": "Mike Atkisson",
   "license": "MIT",
   "dependencies": {
-    "cheerio": "^1.0.0-rc.1",
-    "js-beautify": "^1.6.14"
+    "cheerio": "1.0.0-rc.1",
+    "js-beautify": "1.6.14"
   }
 }
