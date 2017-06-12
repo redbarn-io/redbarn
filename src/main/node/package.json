@@ -1,0 +1,19 @@
+{
+  "name": "redbarn",
+  "version": "0.1.0",
+  "description": "Bundled node modules and extensions for redbarn.io",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "redbarn",
+    "redbarn.io"
+  ],
+  "author": "Mike Atkisson",
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.1",
+    "js-beautify": "^1.6.14"
+  }
+}
