@@ -56,7 +56,7 @@
     // Beautifies HTML markup.
     processor.beautify = function(markup, options) {
         markup = markup || '';
-        return beautify(markup, options);
+        return beautifyHtml(markup, options);
     };
 
     return processor;
