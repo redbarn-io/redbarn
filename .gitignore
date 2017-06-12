@@ -19,3 +19,7 @@ buildNumber.properties
 .settings
 .classpath
 .project
+
+# Node related
+node_modules/
+redbarn-bundle.js
