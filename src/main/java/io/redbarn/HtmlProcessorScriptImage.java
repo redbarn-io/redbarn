@@ -97,4 +97,26 @@ public class HtmlProcessorScriptImage {
         Object[] args = ServletUtils.getWebVariables(params, request);
         return (String) mirror.callMember("html", args);
     }
+
+    /**
+     * Beautifies HTML markup.  This markup does not necessarily need to have
+     * been processed by the markup converter, but that's the most common
+     * use case.  This method can be useful in testing scenarios when you need
+     * to compare expected markup to actual markup or if you just want nicely
+     * formatted markup.
+     *
+     * @param markup The markup to be beautified.  Null or empty values will
+     *               force the return of an empty string.
+     * @param options Under the hood, this method uses the js-beautify
+     *                (https://github.com/beautify-web/js-beautify) node package
+     *                via Nashorn.  There are a number of options for
+     *                js-beautify's HTML formatter such as "indent-size",
+     *                "preserve-newlines", etc.  Please see the Github docs
+     *                for more detail on all available options.
+     * @return A formatted markup string or an empty string if the markup
+     *         could not be formatted.
+     */
+    public String beautify(String markup, Map<String, Object> options) {
+        return (String) mirror.callMember("beautify", markup, options);
+    }
 }

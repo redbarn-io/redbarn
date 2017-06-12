@@ -53,6 +53,12 @@
         return $.html();
     };
 
+    // Beautifies HTML markup.
+    processor.beautify = function(markup, options) {
+        markup = markup || '';
+        return beautify(markup, options);
+    };
+
     return processor;
 
 })(this, this._, this.cheerio);
