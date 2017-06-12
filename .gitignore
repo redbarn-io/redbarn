@@ -22,4 +22,5 @@ buildNumber.properties
 
 # Node related
 node_modules/
+package-lock.json
 redbarn-bundle.js
