@@ -6,7 +6,8 @@
  * @since 0.1.0
  */
 var redbarn = {
-    processors: { }
+    processors: { },
+    markups: { }
 };
 
 module.exports = redbarn;
