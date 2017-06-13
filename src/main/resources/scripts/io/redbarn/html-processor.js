@@ -17,7 +17,7 @@
     // Clean and load cheerio with markup.
     processor.markup = function(markup, options) {
         markup = _.replaceAll(markup, '&#039;', '\'');
-        $ = cheerio.load(markup, options);
+        $ = cheerio.reload(markup, options);
     };
 
     // Stores the processor script into the array of processors.
@@ -54,9 +54,13 @@
     };
 
     // Beautifies HTML markup.
-    processor.beautify = function(markup, options) {
-        markup = markup || '';
-        return beautifyHtml(markup, options);
+    processor.beautifiedHtml = function() {
+        var args = [];
+        if (process) {
+            args = _.argsToArray(arguments);
+            process.apply(processor, args);
+        }
+        return $.markup();
     };
 
     return processor;

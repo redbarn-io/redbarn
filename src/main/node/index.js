@@ -22,7 +22,7 @@ console = require('./lib/global/console');
 cheerio = require('cheerio');
 _ = require('lodash');
 redbarn = require('./lib/global/redbarn');
-beautifyHtml = require('js-beautify').html;
+//beautifyHtml = require('js-beautify').html;
 
 // Extend lodash
 _.mixin({'uuid': require('./lib/lodash/uuid')});
@@ -31,4 +31,6 @@ _.mixin({'getParams': require('./lib/lodash/get-params')});
 _.mixin({'argsToArray': require('./lib/lodash/args-to-array')});
 
 // Extend cheerio
-_.extend(cheerio.prototype, require('./lib/cheerio/repeat'))
+_.extend(cheerio.prototype, require('./lib/cheerio/repeat'));
+_.extend(cheerio, require('./lib/cheerio/reload'));
+

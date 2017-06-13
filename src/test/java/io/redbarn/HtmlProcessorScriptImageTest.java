@@ -1,6 +1,5 @@
 package io.redbarn;
 
-import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -189,65 +188,44 @@ public class HtmlProcessorScriptImageTest {
     }
 
     @Test(groups = "Slow")
-    public void beautify_MarkupIsNullOptionsIsNull_ReturnsEmpty() throws IOException, ScriptException {
-        String markup = "<html><body><div class=\"change\">foo</div></body></html>";
-        String processFunction = "function process() { }";
+    public void getBeautifiedHtmlMarkup_ProcessFunctionCallsRepeat_FormatsMarkup() throws IOException, ScriptException {
+        String markup =
+                "<html> \n" +
+                        "  <body> \n" +
+                        "    <ul> \n" +
+                        "      <li>foo</li> \n" +
+                        "    </ul> \n" +
+                        "  </body> \n" +
+                        "</html>";
+        String processFunction =
+                "function process(fruit, request) { \n" +
+                        "  $('ul > li').repeat(fruit, function(type, li) { \n" +
+                        "    li.text(type); \n" +
+                        "  }); \n" +
+                        "}";
         HtmlProcessorScriptImage processor = new HtmlProcessorScriptImage(
                 scriptEngine,
                 markup,
                 "foo",
                 processFunction
         );
-        String beautified = processor.beautify(null, null);
-        assertEquals(beautified, "");
+
+        String[] fruit = new String[] { "apples", "pears", "plums" };
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getAttribute("fruit")).thenReturn(fruit);
+        String expected =
+                "<html>\n\n" +
+                "<body>\n" +
+                "    <ul>\n" +
+                "        <li>apples</li>\n" +
+                "        <li>pears</li>\n" +
+                "        <li>plums</li>\n" +
+                "    </ul>\n" +
+                "</body>\n\n" +
+                "</html>";
+        String actual = processor.getBeautifiedHtmlMarkup(request);
+        assertEquals(actual, expected);
     }
 
-    @Test(groups = "Slow")
-    public void beautify_MarkupIsNotNullOptionsIsNull_Succeeds() throws IOException, ScriptException {
-        String markup = "<html><body><div class=\"change\">foo</div></body></html>";
-        String processFunction = "function process() { }";
-        HtmlProcessorScriptImage processor = new HtmlProcessorScriptImage(
-                scriptEngine,
-                markup,
-                "foo",
-                processFunction
-        );
-        String expected = "<html>\n\n<body>\n    <div class=\"change\">foo</div>\n</body>\n\n</html>";
-        String beautified = processor.beautify(markup, null);
-        assertEquals(beautified, expected);
-    }
-
-    @Test(groups = "Slow")
-    public void beautify_MarkupIsNotNullOptionsIsNotNull_HonorsIndentSizeOption() throws IOException, ScriptException {
-        String markup = "<html><body><div class=\"change\">foo</div></body></html>";
-        String processFunction = "function process() { }";
-        HtmlProcessorScriptImage processor = new HtmlProcessorScriptImage(
-                scriptEngine,
-                markup,
-                "foo",
-                processFunction
-        );
-        String expected = "<html>\n\n<body>\n  <div class=\"change\">foo</div>\n</body>\n\n</html>";
-        Map<String, Object> options = new HashMap<>();
-        options.put("indent_size", 2);
-        String beautified = processor.beautify(markup, options);
-        assertEquals(beautified, expected);
-    }
-
-    @Test(groups = "Slow")
-    public void beautify_MarkupIsNotNullOptionsIsNotNull_HonorsIndentInnerHtml() throws IOException, ScriptException {
-        String markup = "<html><body><div class=\"change\">foo</div></body></html>";
-        String processFunction = "function process() { }";
-        HtmlProcessorScriptImage processor = new HtmlProcessorScriptImage(
-                scriptEngine,
-                markup,
-                "foo",
-                processFunction
-        );
-        String expected = "<html>\n\n    <body>\n        <div class=\"change\">foo</div>\n    </body>\n\n</html>";
-        Map<String, Object> options = new HashMap<>();
-        options.put("indent_inner_html", true);
-        String beautified = processor.beautify(markup, options);
-        assertEquals(beautified, expected);
-    }
 }
