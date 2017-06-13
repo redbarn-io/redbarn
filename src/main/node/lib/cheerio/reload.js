@@ -2,9 +2,9 @@ var _ = { merge: require('lodash/merge') };
 
 /**
  * The reload function works the same as the native Cheerio.load method in that
- * it loads Cheerio with markup and returns a jQuery like instance.  It has been
- * added here to merge in convenience methods such as 'markup' into the
- * jQuery like instance.
+ * it loads Cheerio with markup and returns a jQuery like 'DOM' instance.  It
+ * has been added here to merge in convenience methods such as 'markup' into the
+ * jQuery like dom.
  *
  * To be perfectly honest, I'm not sure what all of the arguments really do.
  * That said, you can find out more about them by looking at the source code

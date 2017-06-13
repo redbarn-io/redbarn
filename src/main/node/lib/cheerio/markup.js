@@ -6,9 +6,8 @@
  * For example:
  *
  * $ = cheerio.load('<html><body><div>foo</div></body></html');
- * var markup = $.beautify();
- * $(markup).beautify(options);
- * // Produces the following markup
+ * $.markup();
+ * // => Produces the following markup
  * <html>
  *
  * <body>
@@ -17,6 +16,8 @@
  *
  * </html>
  *
+ * @param {String | Object} dom A CSS selector or a dom object for stipulating
+ *                              which part of the markup to return.
  * @param {Object} options A collection of js_beautify options used to tailor
  *                         the markup.
  *
