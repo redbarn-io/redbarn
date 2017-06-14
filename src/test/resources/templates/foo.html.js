@@ -1,8 +1,7 @@
 //@ sourceURL=src/test/resources/templates/foo.html.js
 
-function render(lorem, fruit, markup) {
+function render(lorem, fruit, $) {
     'use strict';
-    var $ = cheerio.reload(markup);
 
     // Add items to the 'fruit' list.
     $('ul > li').repeat(fruit, function (type, li) {

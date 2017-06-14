@@ -82,8 +82,16 @@ public class TemplateRenderer {
             String script = ResourceUtils.getResourceString(scriptPath);
             ScriptObjectMirror mirror = (ScriptObjectMirror) scriptEngine.eval(script);
             List<Object> args = Lists.newArrayList(arguments);
-            args.add(markup);
-            markup = (String) mirror.call(null, args.toArray());
+            CheerioScriptImage cheerio = new CheerioScriptImage(scriptEngine);
+            args.add(cheerio.getDom(markup, null));
+
+            // Set up an artificial 'this'
+            ScriptObjectMirror redbarn = (ScriptObjectMirror) scriptEngine.get("redbarn");
+            redbarn.setMember("lorem", args.get(0));
+            redbarn.setMember("fruit", args.get(1));
+            redbarn.setMember("$", args.get(2));
+
+            markup = (String) mirror.call(redbarn, args.toArray());
         } catch (IOException e) {
             // Since we checked that these scripts existed already, this should
             // never happen.  It should be safe to ignore this exception.
