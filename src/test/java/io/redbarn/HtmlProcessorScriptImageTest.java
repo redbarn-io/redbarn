@@ -22,15 +22,7 @@ import static org.testng.Assert.assertNotNull;
  * @author Mike Atkisson
  * @since 0.1.0
  */
-public class HtmlProcessorScriptImageTest {
-
-    private ScriptEngine scriptEngine;
-
-    @BeforeClass(groups = "Slow")
-    public void classSetup() throws IOException, ScriptException {
-        RedbarnScriptEngineManager manager = new RedbarnScriptEngineManager();
-        scriptEngine = manager.getScriptEngine();
-    }
+public class HtmlProcessorScriptImageTest extends AbstractScriptEngineTest {
 
     @Test(groups = "Slow", expectedExceptions = IllegalArgumentException.class)
     public void constructor_ScriptEngineIsNull_Throws()

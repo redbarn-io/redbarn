@@ -16,15 +16,7 @@ import java.io.IOException;
  * @author Mike Atkisson
  * @since 0.1.0
  */
-public class RedbarnScriptEngineManagerTest {
-
-    private ScriptEngine scriptEngine = null;
-
-    @BeforeClass(groups = "Slow")
-    public void classSetup() throws IOException, ScriptException {
-        RedbarnScriptEngineManager manager = new RedbarnScriptEngineManager();
-        scriptEngine = manager.getScriptEngine();
-    }
+public class RedbarnScriptEngineManagerTest extends AbstractScriptEngineTest {
 
     @DataProvider
     public static Object[][] vars() {
