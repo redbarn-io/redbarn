@@ -48,4 +48,23 @@ public class ResourceUtils {
         }
         return reader;
     }
+
+    /**
+     * Determines if a resource exists in the current classpath.
+     *
+     * @param resource The classpath to the resource.
+     * @return True if the resource does exist.
+     */
+    public static boolean exists(String resource) {
+        boolean exists = true;
+        try (Reader reader = getResourceReader(resource)) {
+            if (reader == null) {
+                exists = false;
+            }
+        } catch (IOException e) {
+            // The exception caught here should be swallowed so that the method
+            // returns false gracefully.
+        }
+        return exists;
+    }
 }
