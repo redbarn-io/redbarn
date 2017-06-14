@@ -21,12 +21,15 @@ public class ResourceUtils {
      */
     public static String getResourceString(String resource)
             throws IOException {
-        Reader reader = getResourceReader(resource);
-        if (reader == null) {
-            String message = String.format("The resource, '%s', was not found", resource);
-            throw new IOException(message);
+        String value;
+        try (Reader reader = getResourceReader(resource)) {
+            if (reader == null) {
+                String message = String.format("The resource, '%s', was not found", resource);
+                throw new IOException(message);
+            }
+            value = CharStreams.toString(reader);
         }
-        return CharStreams.toString(reader);
+        return value;
     }
 
     /**
