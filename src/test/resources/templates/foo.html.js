@@ -1,16 +1,28 @@
 //@ sourceURL=src/test/resources/templates/foo.html.js
 
-function render(lorem, fruit, $) {
+function render(lorem, fruit) {
     'use strict';
 
-    console.log('this is a test');
-
-    // Add items to the 'fruit' list.
-    $('ul > li').repeat(fruit, function (type, li) {
-        li.text(type);
+    // Modify the fruit list
+    $('ul').empty();
+    fruit = Java.from(fruit);
+    fruit.forEach(function (type) {
+        $('ul').append('<li>' + type + '</li>');
     });
 
     // Replace all of the meat with filler.
-    $('p').text(lorem);
-    return $.markup();
+    $('p').html(lorem);
+
+    // Add stuff to the body
+    var filler = '<p>The quick brown fox jumps over the lazy dog</p>';
+    $('body').append(filler);
+    $('body').append(filler);
+    $('body').append(filler);
+    $('body').append(filler);
+    $('body').append(filler);
+    $('body').append(filler);
+    $('body').append(filler);
+    $('body').append(filler);
+    $('body').append(filler);
+    $('body').append(filler);
 }
