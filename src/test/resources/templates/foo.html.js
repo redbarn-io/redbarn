@@ -12,4 +12,17 @@ function render(lorem, fruit) {
 
     // Replace all of the meat with filler.
     $('p').html(lorem);
+
+    // Add stuff to the body
+    var filler = '<p>The quick brown fox jumps over the lazy dog</p>';
+    $('body').append(filler);
+    $('body').append(filler);
+    $('body').append(filler);
+    $('body').append(filler);
+    $('body').append(filler);
+    $('body').append(filler);
+    $('body').append(filler);
+    $('body').append(filler);
+    $('body').append(filler);
+    $('body').append(filler);
 }
