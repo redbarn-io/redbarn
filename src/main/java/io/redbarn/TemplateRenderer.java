@@ -80,18 +80,25 @@ public class TemplateRenderer {
         try {
             markup = ResourceUtils.getResourceString(templatePath);
             String script = ResourceUtils.getResourceString(scriptPath);
-            ScriptObjectMirror mirror = (ScriptObjectMirror) scriptEngine.eval(script);
             List<Object> args = Lists.newArrayList(arguments);
             CheerioScriptImage cheerio = new CheerioScriptImage(scriptEngine);
             args.add(cheerio.getDom(markup, null));
 
-            // Set up an artificial 'this'
-            ScriptObjectMirror redbarn = (ScriptObjectMirror) scriptEngine.get("redbarn");
+            // Set up a new Global context
+            ScriptContext context = new SimpleScriptContext();
+
+            // Add lodash and console to the new global context.
+            context.setAttribute("_", scriptEngine.get("_"), ScriptContext.ENGINE_SCOPE);
+            context.setAttribute("console", scriptEngine.get("console"), ScriptContext.ENGINE_SCOPE);
+
+            // Set up an artificial 'this' which gets applied to the render method.
+            ScriptObjectMirror redbarn = (ScriptObjectMirror) scriptEngine.eval("redbarn = { };", context);
             redbarn.setMember("lorem", args.get(0));
             redbarn.setMember("fruit", args.get(1));
             redbarn.setMember("$", args.get(2));
 
-            markup = (String) mirror.call(redbarn, args.toArray());
+            ScriptObjectMirror global = (ScriptObjectMirror) scriptEngine.eval(script, context);
+            markup = (String) global.call(redbarn, args.toArray());
         } catch (IOException e) {
             // Since we checked that these scripts existed already, this should
             // never happen.  It should be safe to ignore this exception.

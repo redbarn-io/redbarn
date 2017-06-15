@@ -3,6 +3,8 @@
 function render(lorem, fruit, $) {
     'use strict';
 
+    console.log('this is a test');
+
     // Add items to the 'fruit' list.
     $('ul > li').repeat(fruit, function (type, li) {
         li.text(type);
