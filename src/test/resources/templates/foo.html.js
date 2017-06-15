@@ -10,5 +10,5 @@ function render(lorem, fruit, $) {
 
     // Replace all of the meat with filler.
     $('p').text(lorem);
-    return $.html();
+    return $.markup();
 }
