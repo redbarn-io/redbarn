@@ -1,16 +1,14 @@
 //@ sourceURL=src/test/resources/templates/foo.html.js
 
-function render(lorem, fruit, $) {
-    'use strict';
+function render(lorem, fruit) {
 
-    console.log('this is a test');
-
-    // Add items to the 'fruit' list.
-    $('ul > li').repeat(fruit, function (type, li) {
-        li.text(type);
+    // Modify the list of fruits.
+    $('ul').empty();
+    fruit = Java.from(fruit);
+    fruit.forEach(function (type) {
+        $('ul').append('<li>' + type + '</li>')
     });
 
     // Replace all of the meat with filler.
-    $('p').text(lorem);
-    return $.markup();
+    $('p').html(lorem);
 }

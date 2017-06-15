@@ -3,6 +3,8 @@ package io.redbarn;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
@@ -81,24 +83,25 @@ public class TemplateRenderer {
             markup = ResourceUtils.getResourceString(templatePath);
             String script = ResourceUtils.getResourceString(scriptPath);
             List<Object> args = Lists.newArrayList(arguments);
-            CheerioScriptImage cheerio = new CheerioScriptImage(scriptEngine);
-            args.add(cheerio.getDom(markup, null));
+            Document dom = Jsoup.parse(markup);
 
             // Set up a new Global context
             ScriptContext context = new SimpleScriptContext();
 
             // Add lodash and console to the new global context.
-            context.setAttribute("_", scriptEngine.get("_"), ScriptContext.ENGINE_SCOPE);
             context.setAttribute("console", scriptEngine.get("console"), ScriptContext.ENGINE_SCOPE);
+            context.setAttribute("_", scriptEngine.get("_"), ScriptContext.ENGINE_SCOPE);
+            context.setAttribute("document", dom, ScriptContext.ENGINE_SCOPE);
+            scriptEngine.eval("function $(selector) { return document.select(selector); }", context);
 
             // Set up an artificial 'this' which gets applied to the render method.
             ScriptObjectMirror redbarn = (ScriptObjectMirror) scriptEngine.eval("redbarn = { };", context);
             redbarn.setMember("lorem", args.get(0));
             redbarn.setMember("fruit", args.get(1));
-            redbarn.setMember("$", args.get(2));
 
-            ScriptObjectMirror global = (ScriptObjectMirror) scriptEngine.eval(script, context);
-            markup = (String) global.call(redbarn, args.toArray());
+            ScriptObjectMirror render = (ScriptObjectMirror) scriptEngine.eval(script, context);
+            render.call(redbarn, args.toArray());
+            markup = dom.toString();
         } catch (IOException e) {
             // Since we checked that these scripts existed already, this should
             // never happen.  It should be safe to ignore this exception.
