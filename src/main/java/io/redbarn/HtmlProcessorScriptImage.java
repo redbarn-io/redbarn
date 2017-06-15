@@ -111,4 +111,10 @@ public class HtmlProcessorScriptImage {
         return (String) mirror.callMember("beautifiedHtml", args);
     }
 
+    public String getRenderedMarkup(HttpServletRequest request) {
+        String[] params = getParameters();
+        Object[] args = ServletUtils.getWebVariables(params, request);
+        return (String) mirror.callMember("run", args);
+    }
+
 }

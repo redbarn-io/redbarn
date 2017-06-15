@@ -63,6 +63,14 @@
         return $.markup();
     };
 
+    processor.run = function () {
+        var args = _.argsToArray(arguments),
+            render = load('classpath:scripts/test-renderer.js');
+        args.push($);
+        args.push(_);
+        return render.apply(processor, args);
+    }
+
     return processor;
 
 })(this, this._, this.cheerio);

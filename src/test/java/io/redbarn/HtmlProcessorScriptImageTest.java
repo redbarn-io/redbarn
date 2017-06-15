@@ -22,15 +22,7 @@ import static org.testng.Assert.assertNotNull;
  * @author Mike Atkisson
  * @since 0.1.0
  */
-public class HtmlProcessorScriptImageTest {
-
-    private ScriptEngine scriptEngine;
-
-    @BeforeClass(groups = "Slow")
-    public void classSetup() throws IOException, ScriptException {
-        RedbarnScriptEngineManager manager = new RedbarnScriptEngineManager();
-        scriptEngine = manager.getScriptEngine();
-    }
+public class HtmlProcessorScriptImageTest extends AbstractScriptEngineTest {
 
     @Test(groups = "Slow", expectedExceptions = IllegalArgumentException.class)
     public void constructor_ScriptEngineIsNull_Throws()
@@ -228,4 +220,46 @@ public class HtmlProcessorScriptImageTest {
         assertEquals(actual, expected);
     }
 
+    @Test(groups = "Slow")
+    public void getRenderedMarkup_ProcessFunctionCallsRepeat_FormatsMarkup() throws IOException, ScriptException {
+        String markup =
+                "<html> \n" +
+                        "  <body> \n" +
+                        "    <ul> \n" +
+                        "      <li>foo</li> \n" +
+                        "    </ul> \n" +
+                        "  </body> \n" +
+                        "</html>";
+        String processFunction =
+                "function process(fruit, request, $, _) { \n" +
+                        "  console.log(arguments.length); \n" +
+                        "  $('ul > li').repeat(fruit, function(type, li) { \n" +
+                        "    li.text(type); \n" +
+                        "  }); \n" +
+                        "  return $.markup(); \n" +
+                        "}";
+        HtmlProcessorScriptImage processor = new HtmlProcessorScriptImage(
+                scriptEngine,
+                markup,
+                "foo",
+                processFunction
+        );
+
+        String[] fruit = new String[] { "apples", "pears", "plums" };
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getAttribute("fruit")).thenReturn(fruit);
+        String expected =
+                "<html>\n\n" +
+                        "<body>\n" +
+                        "    <ul>\n" +
+                        "        <li>apples</li>\n" +
+                        "        <li>pears</li>\n" +
+                        "        <li>plums</li>\n" +
+                        "    </ul>\n" +
+                        "</body>\n\n" +
+                        "</html>";
+        String actual = processor.getRenderedMarkup(request);
+        assertEquals(actual, expected);
+    }
 }

@@ -34,7 +34,9 @@ public class ServletUtils {
         }
 
         Object variable = null;
-        if (!name.toLowerCase().equals("request")) {
+        if (!name.toLowerCase().equals("request") &&
+            !name.equals("$") &&
+            !name.equals("_")) {
             variable = request.getAttribute(name);
             if (variable == null) {
                 variable = request.getParameter(name);
@@ -82,6 +84,8 @@ public class ServletUtils {
         for(String name : names) {
             if (name.toLowerCase().equals("request")) {
                 variables.add(request);
+            } else if(name.equals("$") || name.equals("_")) {
+                // Do nothing, these will be added by JavaScript
             } else {
                 Object variable = getWebVariable(name, request);
                 variables.add(variable);

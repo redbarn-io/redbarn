@@ -1,7 +1,6 @@
 /**
- * Gets all parameters of a listed parameters (not actual arguments) of a
- * function as an array of strings. In redbarn getParams is exposed as a Lodash
- * mixin.
+ * Gets all listed parameters (not actual arguments) of a function as an array
+ * of strings. In redbarn getParams is exposed as a Lodash mixin.
  *
  * General usage:
  * function foo(bar, baz) {

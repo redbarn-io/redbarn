@@ -21,12 +21,15 @@ public class ResourceUtils {
      */
     public static String getResourceString(String resource)
             throws IOException {
-        Reader reader = getResourceReader(resource);
-        if (reader == null) {
-            String message = String.format("The resource, '%s', was not found", resource);
-            throw new IOException(message);
+        String value;
+        try (Reader reader = getResourceReader(resource)) {
+            if (reader == null) {
+                String message = String.format("The resource, '%s', was not found", resource);
+                throw new IOException(message);
+            }
+            value = CharStreams.toString(reader);
         }
-        return CharStreams.toString(reader);
+        return value;
     }
 
     /**
@@ -44,5 +47,24 @@ public class ResourceUtils {
             reader = new InputStreamReader(stream);
         }
         return reader;
+    }
+
+    /**
+     * Determines if a resource exists in the current classpath.
+     *
+     * @param resource The classpath to the resource.
+     * @return True if the resource does exist.
+     */
+    public static boolean exists(String resource) {
+        boolean exists = true;
+        try (Reader reader = getResourceReader(resource)) {
+            if (reader == null) {
+                exists = false;
+            }
+        } catch (IOException e) {
+            // The exception caught here should be swallowed so that the method
+            // returns false gracefully.
+        }
+        return exists;
     }
 }
