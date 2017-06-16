@@ -22,6 +22,19 @@ public class RedbarnScriptEngineManagerTest extends AbstractScriptEngineTest {
     public static Object[][] vars() {
         return new Object[][] {
                 {"console", true},
+                {"_", true},
+                {"cheerio", true},
+                {"redbarn", true}
+        };
+    }
+
+    @DataProvider
+    public static Object[][] mixins() {
+        return new Object[][] {
+                {"uuid", true},
+                {"replaceAll", true},
+                {"getParams", true},
+                {"argsToArray", true}
         };
     }
 
@@ -38,4 +51,12 @@ public class RedbarnScriptEngineManagerTest extends AbstractScriptEngineTest {
         Assert.assertNotNull(variable);
     }
 
+    @Test(groups = "Slow", dataProvider = "mixins")
+    public void getScriptEngine_WithNoArguments_LodashMixinIsAvailableInScript(String name, boolean notNull)
+            throws IOException, ScriptException {
+        ScriptObjectMirror lodash = (ScriptObjectMirror) scriptEngine.get("_");
+        Object mixin = lodash.get(name);
+        boolean actual = mixin != null;
+        Assert.assertEquals(notNull, actual);
+    }
 }

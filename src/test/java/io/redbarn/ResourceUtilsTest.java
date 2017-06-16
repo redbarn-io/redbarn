@@ -21,7 +21,7 @@ public class ResourceUtilsTest {
 
     @Test(groups = "Fast")
     public void getResourceString_ResourceFound_ReturnsResourceAsString() throws IOException {
-        String text = ResourceUtils.getResourceString("scripts/io/redbarn/console.js");
+        String text = ResourceUtils.getResourceString("scripts/io/redbarn/redbarn-bundle.js");
         assertNotNull(text);
     }
 
@@ -33,7 +33,7 @@ public class ResourceUtilsTest {
 
     @Test(groups = "Fast")
     public void getResourceReader_ResourceFound_ReturnsReader() throws IOException {
-        String resource = "scripts/io/redbarn/console.js";
+        String resource = RedbarnScriptEngineManager.REDBARN_JAVASCRIPT_BUNDLE_RESOURCE;
         Reader reader = ResourceUtils.getResourceReader(resource);
         assertNotNull(reader);
         reader.close();
@@ -41,7 +41,7 @@ public class ResourceUtilsTest {
 
     @Test(groups = "Fast")
     public void exists_ResourceFound_ReturnsTrue() {
-        String resource = "scripts/io/redbarn/console.js";
+        String resource = RedbarnScriptEngineManager.REDBARN_JAVASCRIPT_BUNDLE_RESOURCE;
         boolean actual = ResourceUtils.exists(resource);
         assertEquals(actual, true);
     }
