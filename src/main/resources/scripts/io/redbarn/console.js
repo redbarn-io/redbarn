@@ -10,4 +10,3 @@ console = {
     debug: print,
     info: print
 };
-module.exports = console;
