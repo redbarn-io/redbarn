@@ -87,4 +87,15 @@ public class TemplateRendererTest extends AbstractScriptEngineTest {
         TemplateRenderer renderer = new TemplateRenderer(scriptEngine);
         assertRenderSuccess(renderer, templatePath, args.toArray());
     }
+
+    @Test(groups = "Slow")
+    public void render_ScriptLoadsResource_Succeeds() throws ScriptException, IOException {
+        String templatePath = "templates/load-scripts.html";
+        List<Object> args = new ArrayList<>();
+        args.add("lorem ipsum dolar at sim.");
+        String[] fruit = new String[] {"apples", "pears", "plums"};
+        args.add(fruit);
+        TemplateRenderer renderer = new TemplateRenderer(scriptEngine);
+        assertRenderSuccess(renderer, templatePath, args.toArray());
+    }
 }

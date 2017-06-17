@@ -88,9 +88,8 @@ public class TemplateRenderer {
             // Set up a new Global context
             ScriptContext context = new SimpleScriptContext();
 
-            // Add lodash and console to the new global context.
+            // Add objects to the new global context.
             context.setAttribute("console", scriptEngine.get("console"), ScriptContext.ENGINE_SCOPE);
-            context.setAttribute("_", scriptEngine.get("_"), ScriptContext.ENGINE_SCOPE);
             context.setAttribute("document", dom, ScriptContext.ENGINE_SCOPE);
             scriptEngine.eval("function $(selector) { return document.select(selector); }", context);
 
