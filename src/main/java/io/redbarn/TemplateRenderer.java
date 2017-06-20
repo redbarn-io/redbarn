@@ -5,6 +5,9 @@ import com.google.common.collect.Lists;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.select.Elements;
 
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
@@ -99,12 +102,68 @@ public class TemplateRenderer {
             redbarn.setMember("fruit", args.get(1));
 
             ScriptObjectMirror render = (ScriptObjectMirror) scriptEngine.eval(script, context);
-            render.call(redbarn, args.toArray());
-            markup = dom.toString();
+            Object rendered = render.call(redbarn, args.toArray());
+
+            if (rendered.toString().equals("undefined")) {
+                markup = dom.toString();
+            } else {
+                ScriptObjectMirror returnOptions = (ScriptObjectMirror) rendered;
+                if (returnOptions.hasMember("layout")) {
+                    String layoutPath = (String) returnOptions.get("layout");
+                    markup = getLayoutMarkup(layoutPath, dom);
+                }
+            }
+
+            markup = replaceIncludes(markup);
         } catch (IOException e) {
             // Since we checked that these scripts existed already, this should
             // never happen.  It should be safe to ignore this exception.
         }
         return markup;
+    }
+
+    private static String getLayoutMarkup(String path, Document partial) throws IOException {
+        String markup = ResourceUtils.getResourceString(path);
+        Document layout = Jsoup.parse(markup);
+
+        // Replace all elements from the layout with corresponding elements
+        // found in the partial.
+        Elements identified = partial.select("[id]");
+        for (Element content : identified) {
+            Element placeHolder = layout.select("[id=\"" + content.id() + "\"]").first();
+            if (placeHolder != null) {
+                placeHolder.replaceWith(content);
+            }
+        }
+
+        // Replace any redbarn specific CSS links with one or more corresponding
+        // links found in the partial.
+        Element linkHolder = layout.select("[type=\"redbarn/css\"]").first();
+        if (linkHolder != null) {
+            Elements links = partial.select("[type=\"redbarn/css\"]");
+            Element previous = linkHolder;
+            for (Element link : links) {
+                link.removeAttr("type");
+                previous.after(link);
+                previous = link;
+            }
+            linkHolder.remove();
+        }
+
+        return layout.toString();
+    }
+
+    private static String replaceIncludes(String markup) throws IOException {
+        Document dom = Jsoup.parse(markup);
+        Elements elements = dom.select("[type=\"redbarn/html\"]");
+        for (Element element : elements) {
+            String path = element.attr("href");
+            if (!Strings.isNullOrEmpty(path)) {
+                String include = ResourceUtils.getResourceString(path);
+                Document document = Jsoup.parseBodyFragment(include);
+                element.replaceWith(document.body().child(0));
+            }
+        }
+        return dom.toString();
     }
 }
