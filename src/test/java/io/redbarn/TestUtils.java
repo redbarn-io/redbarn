@@ -73,6 +73,9 @@ public class TestUtils {
      * @return The minified markup.
      */
     public static String minifyMarkup(String markup) {
-        return markup.replaceAll(">\\s+",">").replaceAll("\\s+<","<");
+        return markup.replaceAll(">\\s+",">")
+                .replaceAll("\\s+<","<")
+                .replaceAll("\\{\\s+", "{")
+                .replaceAll("\\s+}", "}");
     }
 }
