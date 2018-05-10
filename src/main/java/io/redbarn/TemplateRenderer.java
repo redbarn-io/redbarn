@@ -36,7 +36,7 @@ public class TemplateRenderer {
      */
     public TemplateRenderer(ScriptEngine scriptEngine) {
         if (scriptEngine == null) {
-            String msg = "The 'scriptEngine' argument cannot be null.";
+            var msg = "The 'scriptEngine' argument cannot be null.";
             throw new IllegalArgumentException(msg);
         }
 
@@ -64,18 +64,18 @@ public class TemplateRenderer {
     public String render(String templatePath, Object[] arguments)
             throws ScriptException {
         if (Strings.isNullOrEmpty(templatePath)) {
-            String msg = "The 'templatePath' argument cannot be null or empty.";
+            var msg = "The 'templatePath' argument cannot be null or empty.";
             throw new IllegalArgumentException(msg);
         }
         if (!ResourceUtils.exists(templatePath)) {
-            String msg = "The specified template '%s' could not be found " +
+            var msg = "The specified template '%s' could not be found " +
                          "as a classpath resource.";
             msg = String.format(msg, templatePath);
             throw new RedbarnException(msg);
         }
         String scriptPath = templatePath + ".js";
         if (!ResourceUtils.exists(scriptPath)) {
-            String msg = "The specified script '%s' could not be found " +
+            var msg = "The specified script '%s' could not be found " +
                     "as a classpath resource.";
             msg = String.format(msg, scriptPath);
             throw new RedbarnException(msg);
@@ -84,12 +84,12 @@ public class TemplateRenderer {
         String markup = null;
         try {
             markup = ResourceUtils.getResourceString(templatePath);
-            String script = ResourceUtils.getResourceString(scriptPath);
-            List<Object> args = Lists.newArrayList(arguments);
+            var script = ResourceUtils.getResourceString(scriptPath);
+            var args = Lists.newArrayList(arguments);
             Document dom = Jsoup.parse(markup);
 
             // Set up a new Global context
-            ScriptContext context = new SimpleScriptContext();
+            var context = new SimpleScriptContext();
             context.setBindings(scriptEngine.createBindings(), ScriptContext.ENGINE_SCOPE);
 
             // Add objects to the new global context.
@@ -98,20 +98,17 @@ public class TemplateRenderer {
             scriptEngine.eval("function $(selector) { return document.select(selector); }", context);
 
             // Set up an artificial 'this' which gets applied to the render method.
-            ScriptObjectMirror redbarn = (ScriptObjectMirror) scriptEngine.eval("redbarn = { };", context);
-            redbarn.setMember("lorem", args.get(0));
-            redbarn.setMember("fruit", args.get(1));
-
+            var redbarn = (ScriptObjectMirror) scriptEngine.eval("redbarn = { };", context);
             scriptEngine.eval(script, context);
-            ScriptObjectMirror render = (ScriptObjectMirror) scriptEngine.eval("render", context);
+            var render = (ScriptObjectMirror) scriptEngine.eval("render", context);
             Object rendered = render.call(redbarn, args.toArray());
 
             if (rendered.toString().equals("undefined")) {
                 markup = dom.toString();
             } else {
-                ScriptObjectMirror returnOptions = (ScriptObjectMirror) rendered;
+                var returnOptions = (ScriptObjectMirror) rendered;
                 if (returnOptions.hasMember("layout")) {
-                    String layoutPath = (String) returnOptions.get("layout");
+                    var layoutPath = (String) returnOptions.get("layout");
                     markup = getLayoutMarkup(layoutPath, dom);
                 }
             }
@@ -125,7 +122,7 @@ public class TemplateRenderer {
     }
 
     private static String getLayoutMarkup(String path, Document partial) throws IOException {
-        String markup = ResourceUtils.getResourceString(path);
+        var markup = ResourceUtils.getResourceString(path);
         Document layout = Jsoup.parse(markup);
 
         // Replace all elements from the layout with corresponding elements
