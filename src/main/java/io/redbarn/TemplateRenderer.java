@@ -90,6 +90,7 @@ public class TemplateRenderer {
 
             // Set up a new Global context
             ScriptContext context = new SimpleScriptContext();
+            context.setBindings(scriptEngine.createBindings(), ScriptContext.ENGINE_SCOPE);
 
             // Add objects to the new global context.
             context.setAttribute("console", scriptEngine.get("console"), ScriptContext.ENGINE_SCOPE);
@@ -101,7 +102,8 @@ public class TemplateRenderer {
             redbarn.setMember("lorem", args.get(0));
             redbarn.setMember("fruit", args.get(1));
 
-            ScriptObjectMirror render = (ScriptObjectMirror) scriptEngine.eval(script, context);
+            scriptEngine.eval(script, context);
+            ScriptObjectMirror render = (ScriptObjectMirror) scriptEngine.eval("render", context);
             Object rendered = render.call(redbarn, args.toArray());
 
             if (rendered.toString().equals("undefined")) {
